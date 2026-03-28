@@ -1,23 +1,66 @@
-public enum TankPosition {
-    FRONT_LINE(2.0, 3.0, 1.0, 5, "Charge"),
-    TANK_LINE(1.5, 2.5, 0.8, 3, "Hold Ground"),
-    FLANK(1.8, 1.0, 1.5, 4, "Outmaneuver"),
-    SUPPORT(1.0, 1.0, 1.2, 6, "Reinforce"),
-    AMBUSH(2.5, 1.2, 0.5, 2, "Surprise Attack");
+public class TankPosition {
 
-    private final double damageMultiplier;
-    private final double armorMultiplier;
-    private final double speedMultiplier;
-    private final int visibilityLevel;
-    private final String uniqueAbilityName;
-
-    TankPosition(double damageMultiplier, double armorMultiplier, double speedMultiplier, int visibilityLevel, String uniqueAbilityName) {
-        this.damageMultiplier = damageMultiplier;
-        this.armorMultiplier = armorMultiplier;
-        this.speedMultiplier = speedMultiplier;
-        this.visibilityLevel = visibilityLevel;
-        this.uniqueAbilityName = uniqueAbilityName;
+    public enum PositionType {
+        FRONT_LINE,
+        TANK_LINE,
+        FLANK,
+        SUPPORT,
+        AMBUSH
     }
 
-    // Getters for each property can be added here
+    private PositionType positionType;
+    private int attackModifier;
+    private int defenseModifier;
+    private String specialAbility;
+    private long cooldown; // in seconds
+    private long lastSwitchedTime;
+
+    public TankPosition(PositionType positionType, int attackModifier, int defenseModifier, String specialAbility, long cooldown) {
+        this.positionType = positionType;
+        this.attackModifier = attackModifier;
+        this.defenseModifier = defenseModifier;
+        this.specialAbility = specialAbility;
+        this.cooldown = cooldown;
+        this.lastSwitchedTime = 0;
+    }
+
+    public void switchPosition(TankPosition newPosition) {
+        long currentTime = System.currentTimeMillis() / 1000;
+
+        if (currentTime - lastSwitchedTime >= cooldown) {
+            this.positionType = newPosition.positionType;
+            this.attackModifier = newPosition.attackModifier;
+            this.defenseModifier = newPosition.defenseModifier;
+            this.specialAbility = newPosition.specialAbility;
+            this.lastSwitchedTime = currentTime;
+            System.out.println("Switched to position: " + positionType);
+        } else {
+            System.out.println("Cannot switch position: cooldown active.");
+        }
+    }
+
+    // Getters and Setters
+    public PositionType getPositionType() {
+        return positionType;
+    }
+
+    public int getAttackModifier() {
+        return attackModifier;
+    }
+
+    public int getDefenseModifier() {
+        return defenseModifier;
+    }
+
+    public String getSpecialAbility() {
+        return specialAbility;
+    }
+
+    public long getCooldown() {
+        return cooldown;
+    }
+
+    public long getLastSwitchedTime() {
+        return lastSwitchedTime;
+    }
 }
